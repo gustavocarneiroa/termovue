@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<title>Termo Vue</title>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+
+<body>
+    <div id="app">
+        <v-app>
+            <v-main>
+                <v-container>
+                    <template v-for="wrong in wrongWords">
+                        <v-otp-input length="5" :disabled="true" v-model="wrong.word"></v-otp-input>
+                        <div v-if="!!wrong.rightLetters.length">
+                            <p>Letras que você acertou nessa palavra</p>
+                            {{ wrong.rightLetters }}
+                        </div>
+                    </template>
+                    <v-otp-input length="5" v-model="word" :disabled="loading" ref="attempt"
+                        @keypress="isLetter($event)" @finish="onFinish"></v-otp-input>
+                    <p v-if=" attempts > 5"> Última tentativa</p>
+                    <template v-else v-for="x of (5 - attempts)">
+                        <v-otp-input length="5" :disabled="true"></v-otp-input>
+                    </template>
+
+                    <template v-for="letter in alphabet">
+                        <v-btn-toggle rounded>
+                            <v-btn @click="addLetter(letter.letter)" :disabled="letter.disabled">
+                                {{ letter.letter.toUpperCase() }}
+                            </v-btn>
+                        </v-btn-toggle>
+                    </template>
+                    <v-snackbar v-model="snackbar" :color="snackbarColor" :timeout="10000">
+                        {{ text }}
+                    </v-snackbar>
+                </v-container>
+            </v-main>
+        </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="words.js"></script>
+    <script src="term.js"></script>
+
+</body>
+
+</html>
